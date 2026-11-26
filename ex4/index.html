@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RailConnect | Train Reservations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="#"><span class="logo">R</span> Rail<span>Connect</span></a>
+  <nav><a href="#book">Book tickets</a><a href="#pnr">PNR status</a><a href="#features">Services</a></nav>
+  <div class="head-actions"><button class="text-btn" id="loginBtn">Login</button><button class="small-primary" id="registerBtn">Register</button></div>
+</header>
+<main>
+<section class="hero">
+ <div class="hero-content"><div class="eyebrow"><i></i> YOUR JOURNEY, MADE SIMPLE</div><h1>Every journey<br>starts <em>here.</em></h1><p>Search trains, compare classes, reserve your seat and keep every trip in one place.</p>
+ <div class="hero-points"><span>✓ Easy booking</span><span>✓ PNR tracking</span><span>✓ Simple cancellations</span></div></div>
+ <div class="train-art"><div class="sun"></div><div class="track"></div><div class="train">🚆</div><div class="route-tag">YOUR NEXT STOP <b>→</b></div></div>
+</section>
+<section class="booking-card" id="book">
+ <div class="tabs"><button class="tab active">↔ &nbsp; Book a ticket</button><button class="tab" onclick="document.getElementById('pnr').scrollIntoView({behavior:'smooth'})">⌕ &nbsp; PNR enquiry</button></div>
+ <form id="searchForm" class="search-form">
+  <label><span>FROM</span><div class="field"><b>⌖</b><input id="from" value="Chennai Central" required placeholder="Origin station"></div></label>
+  <button type="button" class="swap" id="swapBtn">⇄</button>
+  <label><span>TO</span><div class="field"><b>⌖</b><input id="to" value="Bengaluru" required placeholder="Destination station"></div></label>
+  <label><span>JOURNEY DATE</span><div class="field"><b>▦</b><input id="journeyDate" type="date" required></div></label>
+  <label><span>TRAVEL CLASS</span><div class="field"><b>▤</b><select id="travelClass"><option value="All Classes">All Classes</option><option>Sleeper (SL)</option><option>AC 3 Tier (3A)</option><option>AC 2 Tier (2A)</option><option>AC First Class (1A)</option><option>Chair Car (CC)</option></select></div></label>
+  <button class="search-btn" type="submit">Search trains <b>→</b></button>
+ </form>
+ <p class="demo-note">Demo data only · No real railway inventory or ticketing connection</p>
+</section>
+<section class="section results-section" id="resultsSection">
+ <div class="section-head"><div><div class="eyebrow">PLAN YOUR TRIP</div><h2>Available trains</h2></div><span id="searchSummary" class="muted">Popular sample routes</span></div>
+ <div id="trainResults" class="train-list"></div>
+</section>
+<section class="section pnr-section" id="pnr">
+ <div class="pnr-box"><div><div class="eyebrow">QUICK CHECK</div><h2>Track your booking.</h2><p>Enter your demo PNR number to see reservation status.</p></div>
+ <form id="pnrForm"><input id="pnrInput" placeholder="Enter 10-digit PNR" maxlength="10" required><button class="primary-btn">Check status →</button></form></div>
+ <div id="pnrResult"></div>
+</section>
+<section class="section feature-section" id="features">
+ <div class="section-head"><div><div class="eyebrow">TRAVEL WITH CONFIDENCE</div><h2>Everything in one place.</h2></div></div>
+ <div class="features">
+  <article><div class="feature-icon">🎫</div><h3>Digital tickets</h3><p>Keep your demo booking details and PNR together.</p></article>
+  <article><div class="feature-icon">📍</div><h3>PNR tracking</h3><p>Check sample confirmed, RAC and waiting-list statuses.</p></article>
+  <article><div class="feature-icon">↩</div><h3>Easy cancellation</h3><p>Review the sample refund estimate before cancelling.</p></article>
+  <article><div class="feature-icon">🛡️</div><h3>Secure by design</h3><p>Payment is simulated; no card or banking details are collected.</p></article>
+ </div>
+</section>
+<section class="section admin-section"><div class="admin-banner"><div><div class="eyebrow">FOR OPERATORS</div><h2>Manage the network.</h2><p>Demo admin tools for schedules, inventory and reservations.</p></div><button class="light-btn" id="adminBtn">Open admin panel →</button></div></section>
+</main>
+<footer><a class="brand" href="#"><span class="logo">R</span> Rail<span>Connect</span></a><span>© 2026 RailConnect · Educational project demo</span><a href="#book">Back to top ↑</a></footer>
+
+<div class="overlay" id="overlay"></div>
+<div class="modal" id="bookingModal"><button class="close" data-close>×</button><div class="eyebrow">RESERVE YOUR JOURNEY</div><h2 id="bookingTitle">Passenger details</h2><p class="muted" id="bookingSubtitle"></p>
+<form id="bookingForm"><div id="passengerFields"><label>Passenger full name<input name="passenger" required placeholder="As on ID"></label><label>Age<input name="age" type="number" min="1" max="120" required></label><label>Gender<select name="gender"><option>Prefer not to say</option><option>Female</option><option>Male</option><option>Other</option></select></label></div><label>Email for booking receipt<input name="email" type="email" required placeholder="you@example.com"></label><label>Payment mode<select name="payment"><option>Demo UPI</option><option>Demo card payment</option><option>Pay at counter (offline demo)</option></select></label><div class="fare-line"><span>Demo fare</span><strong id="bookingFare"></strong></div><p class="fine">This prototype does not process payments or issue valid railway tickets.</p><button class="primary-btn wide">Confirm demo booking →</button></form></div>
+<div class="modal" id="ticketModal"><button class="close" data-close>×</button><div class="ticket-top"><div class="eyebrow">BOOKING CREATED · DEMO</div><h2>Your journey is on record.</h2><p class="muted">This is a sample ticket, not valid for travel.</p></div><div id="ticketDetails"></div><button class="primary-btn wide" onclick="window.print()">Print ticket</button></div>
+<div class="modal" id="adminModal"><button class="close" data-close>×</button><div class="eyebrow">ADMIN CONSOLE · DEMO</div><h2>Railway management</h2><div class="admin-stats"><div><b id="adminTrainCount">4</b><small>Sample trains</small></div><div><b id="adminBookingCount">0</b><small>Demo bookings</small></div></div><form id="trainForm"><h3>Add a sample train</h3><label>Train name<input name="name" required placeholder="Coastal Express"></label><label>Train number<input name="number" required placeholder="12600"></label><label>From<input name="from" required placeholder="Origin"></label><label>To<input name="to" required placeholder="Destination"></label><label>Departure<input name="departure" required placeholder="08:30"></label><label>Arrival<input name="arrival" required placeholder="15:30"></label><label>Base fare (₹)<input name="fare" type="number" min="1" required></label><button class="primary-btn wide">Add sample train</button></form></div>
+<div class="modal" id="cancelModal"><button class="close" data-close>×</button><div class="eyebrow">MANAGE RESERVATION</div><h2>Cancel demo ticket</h2><p class="muted">Enter your sample PNR to view a demonstration refund estimate.</p><form id="cancelForm"><label>PNR number<input name="pnr" maxlength="10" required></label><button class="primary-btn wide">Calculate refund</button></form><div id="refundResult"></div></div>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body></html>
