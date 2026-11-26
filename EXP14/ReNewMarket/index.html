@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReNewMarket | Pre-loved, Re-loved</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><span class="brand-icon">↻</span> ReNewMarket</a>
+  <div class="searchbar"><input id="searchInput" placeholder="Search pre-loved treasures..."><button id="searchBtn">Search</button></div>
+  <nav><button class="nav-btn" data-view="market">Marketplace</button><button class="nav-btn" data-view="favorites">♡ Saved</button><button class="nav-btn" data-view="orders">Orders</button><button class="nav-btn" data-view="sell">＋ Sell</button><button class="nav-btn" data-view="admin">Admin</button></nav>
+</header>
+<section class="hero">
+  <div><p class="eyebrow">GOOD FINDS. SECOND CHANCES.</p><h1>Give great things<br><em>a second life.</em></h1><p>Discover unique pre-loved pieces, save money, and keep useful things in circulation.</p><button class="primary" data-view="market">Explore marketplace</button></div>
+  <div class="hero-art"><div class="sun"></div><div class="plant">🌿</div><div class="chair">🪑</div><div class="hero-note">Buy less new.<br>Love what exists.</div></div>
+</section>
+<main>
+  <section class="toolbar"><div><p class="eyebrow">THE MARKETPLACE</p><h2 id="pageTitle">Find your next favourite</h2></div><div class="filters"><select id="categoryFilter"><option value="">All categories</option></select><select id="conditionFilter"><option value="">Any condition</option><option>Like New</option><option>Good</option><option>Fair</option></select><select id="sortFilter"><option value="newest">Newest first</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></div></section>
+  <section id="marketGrid" class="product-grid"></section>
+  <section id="sellPanel" class="panel hidden"><div class="panel-head"><div><p class="eyebrow">PASS IT ON</p><h2>Create a listing</h2></div><span class="pill">Seller studio</span></div>
+    <form id="listingForm" class="form-grid">
+      <label>Item title<input name="title" required placeholder="e.g. Vintage teak side table"></label>
+      <label>Category<select name="category" id="listingCategory" required></select></label>
+      <label>Price (₹)<input name="price" type="number" min="1" required></label>
+      <label>Condition<select name="condition"><option>Like New</option><option>Good</option><option>Fair</option></select></label>
+      <label class="wide">Description<textarea name="description" required rows="3" placeholder="Tell buyers about the item, its condition and dimensions..."></textarea></label>
+      <label>Photo URL (optional)<input name="image" placeholder="https://..."></label>
+      <label>Your name<input name="seller" required placeholder="Seller name"></label>
+      <button class="primary wide" type="submit">Publish listing</button>
+    </form>
+  </section>
+  <section id="favoritesPanel" class="hidden"><h2>Your saved finds</h2><div id="favoritesGrid" class="product-grid"></div></section>
+  <section id="ordersPanel" class="panel hidden"><p class="eyebrow">YOUR ACTIVITY</p><h2>Transaction tracker</h2><div id="ordersList"></div></section>
+  <section id="adminPanel" class="panel hidden"><div class="panel-head"><div><p class="eyebrow">CONTROL CENTRE</p><h2>Administrator dashboard</h2></div><span class="pill">Demo admin</span></div>
+    <div class="admin-login" id="adminLogin"><p>Sign in to manage users, categories, listings and orders.</p><input id="adminEmail" type="email" placeholder="Admin email" value="admin@renew.demo"><input id="adminPassword" type="password" placeholder="Password" value="renew123"><button class="primary" id="adminSignIn">Sign in</button><small>Demo credentials: admin@renew.demo / renew123</small></div>
+    <div id="adminTools" class="hidden">
+      <div class="admin-tabs"><button data-admin="users">Users</button><button data-admin="categories">Categories</button><button data-admin="items">Commodities</button><button data-admin="orders">Orders</button></div>
+      <div id="adminContent"></div>
+    </div>
+  </section>
+</main>
+<footer><div class="brand"><span class="brand-icon">↻</span> ReNewMarket</div><p>Better finds. Less waste. A more circular world.</p><small>ReNewMarket demo marketplace · Payments and delivery coordination are simulated.</small></footer>
+<div id="modal" class="modal hidden"><div class="modal-card"><button class="close" id="closeModal">×</button><div id="modalContent"></div></div></div>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body></html>

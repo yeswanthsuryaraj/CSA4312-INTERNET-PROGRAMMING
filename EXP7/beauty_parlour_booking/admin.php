@@ -1,0 +1,27 @@
+<?php
+require 'config.php'; require 'includes/functions.php'; require_admin(); verify_csrf();
+if ($_SERVER['REQUEST_METHOD']==='POST') {
+    if(isset($_POST['update_status'])) {
+        $status=$_POST['status']; if(in_array($status,['pending','confirmed','completed','cancelled','no_show'],true)){$q=$pdo->prepare("UPDATE bookings SET status=? WHERE id=?");$q->execute([$status,(int)$_POST['booking_id']]);flash('Booking status updated.');}
+        redirect('admin.php');
+    }
+    if(isset($_POST['add_service'])) {
+        $q=$pdo->prepare("INSERT INTO services(name,description,price,duration_minutes,active) VALUES(?,?,?,?,1)");
+        $q->execute([trim($_POST['name']),trim($_POST['description']),max(0,(float)$_POST['price']),max(15,(int)$_POST['duration'])]);flash('Service added.');redirect('admin.php#services');
+    }
+    if(isset($_POST['add_staff'])) {
+        $q=$pdo->prepare("INSERT INTO users(name,email,phone,password_hash,role,speciality) VALUES(?,?,?,?,?,?)");
+        try{$q->execute([trim($_POST['name']),strtolower(trim($_POST['email'])),trim($_POST['phone']),password_hash($_POST['password'],PASSWORD_DEFAULT),$_POST['role'],trim($_POST['speciality'])]);flash('Team member created.');}
+        catch(PDOException $e){flash('Could not create team member. Check whether the email is already used.','error');}redirect('admin.php#team');
+    }
+}
+$bookings=$pdo->query("SELECT b.*,s.name service_name,u.name customer_name,u.phone customer_phone,t.name stylist_name FROM bookings b JOIN services s ON s.id=b.service_id JOIN users u ON u.id=b.user_id JOIN users t ON t.id=b.stylist_id ORDER BY b.appointment_date DESC,b.appointment_time DESC")->fetchAll();
+$services=$pdo->query("SELECT * FROM services ORDER BY name")->fetchAll();
+$pageTitle='Salon management'; require 'includes/header.php';
+?>
+<div class="page-intro"><span class="eyebrow">SALON CONTROL CENTRE</span><h1>Manage your studio.</h1><p>View reservations, update appointment statuses and manage your team and services.</p></div>
+<div class="stats"><div class="stat"><strong><?=$pdo->query("SELECT COUNT(*) FROM bookings WHERE appointment_date>=CURDATE() AND status IN ('pending','confirmed')")->fetchColumn()?></strong><span>Upcoming bookings</span></div><div class="stat"><strong><?=$pdo->query("SELECT COUNT(*) FROM users WHERE role='customer'")->fetchColumn()?></strong><span>Customers</span></div><div class="stat"><strong><?=$pdo->query("SELECT COUNT(*) FROM services WHERE active=1")->fetchColumn()?></strong><span>Active services</span></div></div>
+<section class="panel"><h2>Reservations calendar & list</h2><p class="muted">Use the date filter to focus on a day. Bookings that overlap for the same stylist are blocked during customer booking.</p><label class="filter-label">Filter date <input id="bookingFilter" type="date"></label><div class="table-wrap"><table id="bookingTable"><thead><tr><th>Customer</th><th>Contact</th><th>Service / stylist</th><th>Date & time</th><th>Payment</th><th>Status</th><th>Update</th></tr></thead><tbody><?php foreach($bookings as $b):?><tr data-date="<?=e($b['appointment_date'])?>"><td><?=e($b['customer_name'])?></td><td><?=e($b['customer_phone'])?></td><td><?=e($b['service_name'])?><br><small>with <?=e($b['stylist_name'])?></small></td><td><?=e($b['appointment_date'])?><br><?=e(substr($b['appointment_time'],0,5))?></td><td><?=money((float)$b['total_amount'])?><br><small><?=e($b['payment_status'])?></small></td><td><span class="status <?=e($b['status'])?>"><?=e($b['status'])?></span></td><td><form method="post" class="inline-form"><?=csrf_field()?><input type="hidden" name="booking_id" value="<?=$b['id']?>"><select name="status"><?php foreach(['pending','confirmed','completed','cancelled','no_show'] as $st):?><option <?=$b['status']===$st?'selected':''?>><?=$st?></option><?php endforeach;?></select><button class="button tiny" name="update_status">Save</button></form></td></tr><?php endforeach;?></tbody></table></div></section>
+<section class="admin-grid"><div class="panel" id="services"><h2>Add a service</h2><form method="post"><?=csrf_field()?><label>Service name<input name="name" required></label><label>Description<textarea name="description" rows="3"></textarea></label><div class="two-col"><label>Price (₹)<input type="number" name="price" min="0" step="0.01" required></label><label>Duration (minutes)<input type="number" name="duration" min="15" step="15" value="30" required></label></div><button class="button" name="add_service">Add service</button></form><hr><h3>Current services</h3><?php foreach($services as $s):?><p class="list-row"><?=e($s['name'])?> <strong><?=money((float)$s['price'])?></strong></p><?php endforeach;?></div>
+<div class="panel" id="team"><h2>Add a stylist or staff member</h2><form method="post"><?=csrf_field()?><label>Full name<input name="name" required></label><label>Email<input type="email" name="email" required></label><label>Phone<input name="phone"></label><label>Role<select name="role"><option value="stylist">Stylist</option><option value="staff">Staff</option></select></label><label>Speciality<input name="speciality" placeholder="Hair, nails, skincare..."></label><label>Temporary password<input type="password" name="password" minlength="8" required></label><button class="button" name="add_staff">Create team account</button></form></div></section>
+<?php require 'includes/footer.php'; ?>

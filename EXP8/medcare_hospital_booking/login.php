@@ -1,0 +1,5 @@
+<?php
+require 'config.php';require 'includes/functions.php';verify();
+if($_SERVER['REQUEST_METHOD']==='POST'){$q=$pdo->prepare("SELECT * FROM users WHERE email=? AND active=1");$q->execute([strtolower(trim($_POST['email']??''))]);$u=$q->fetch();if($u&&password_verify($_POST['password']??'',$u['password_hash'])){session_regenerate_id(true);$_SESSION['user']=['id'=>$u['id'],'name'=>$u['name'],'email'=>$u['email'],'role'=>$u['role']];go('dashboard.php');}flash('Invalid email or password.','error');}
+$title='Login';require 'includes/header.php';?>
+<div class="formbox"><span class="tag">WELCOME BACK</span><h1>Login to MedCare</h1><form method="post"><?=csrf()?><label>Email<input type="email" name="email" required></label><label>Password<input type="password" name="password" required></label><button class="btn full">Login</button></form><p>New patient? <a href="register.php">Create an account</a></p><p>Hospital? <a href="hospital_register.php">Register your hospital</a></p></div><?php require 'includes/footer.php';?>

@@ -1,0 +1,1 @@
+</main><footer><p>© <?= date('Y') ?> Glow & Go Beauty Studio · Beauty appointments made simple.</p></footer><script src="<?= BASE_URL ?>/assets/app.js"></script></body></html>

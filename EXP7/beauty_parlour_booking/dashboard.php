@@ -1,0 +1,18 @@
+<?php
+require 'config.php'; require 'includes/functions.php'; require_login(); verify_csrf();
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['cancel_id'])) {
+    $q=$pdo->prepare("UPDATE bookings SET status='cancelled' WHERE id=? AND user_id=? AND status IN ('pending','confirmed') AND appointment_date>=CURDATE()");
+    $q->execute([(int)$_POST['cancel_id'],current_user()['id']]); flash($q->rowCount()?'Appointment cancelled.':'This appointment cannot be cancelled.',$q->rowCount()?'success':'error'); redirect('dashboard.php');
+}
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['feedback_id'])) {
+    $rating=max(1,min(5,(int)$_POST['rating'])); $comment=trim($_POST['comment']??'');
+    $q=$pdo->prepare("INSERT INTO feedback(booking_id,user_id,rating,comment) SELECT id,user_id,?,? FROM bookings WHERE id=? AND user_id=? AND status IN ('completed','confirmed')");
+    $q->execute([$rating,$comment,(int)$_POST['feedback_id'],current_user()['id']]); flash('Thank you for sharing your feedback.'); redirect('dashboard.php');
+}
+$q=$pdo->prepare("SELECT b.*,s.name service_name,u.name stylist_name FROM bookings b JOIN services s ON s.id=b.service_id JOIN users u ON u.id=b.stylist_id WHERE b.user_id=? ORDER BY b.appointment_date DESC,b.appointment_time DESC");
+$q->execute([current_user()['id']]); $bookings=$q->fetchAll();
+$pageTitle='My dashboard'; require 'includes/header.php';
+?>
+<div class="page-intro"><span class="eyebrow">YOUR PERSONAL SPACE</span><h1>Hello, <?=e(current_user()['name'])?>.</h1><p>Keep track of your upcoming visits and your beauty history.</p><a class="button" href="book.php">＋ Book a service</a></div>
+<div class="panel"><h2>My appointments</h2><?php if(!$bookings):?><p class="muted">No appointments yet. Your next little treat is waiting.</p><?php else:?><div class="table-wrap"><table><thead><tr><th>Service</th><th>Stylist</th><th>Date & time</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody><?php foreach($bookings as $b):?><tr><td><?=e($b['service_name'])?></td><td><?=e($b['stylist_name'])?></td><td><?=e($b['appointment_date'])?><br><?=e(substr($b['appointment_time'],0,5))?></td><td><?=money((float)$b['total_amount'])?><br><small>Deposit: <?=money((float)$b['deposit_amount'])?></small></td><td><span class="status <?=e($b['status'])?>"><?=e(ucfirst($b['status']))?></span><br><small><?=e($b['payment_status'])?></small></td><td><?php if(in_array($b['status'],['pending','confirmed']) && $b['appointment_date']>=date('Y-m-d')):?><form method="post" onsubmit="return confirm('Cancel this appointment?')"><?=csrf_field()?><input type="hidden" name="cancel_id" value="<?=$b['id']?>"><button class="link-button danger">Cancel</button></form><?php else:?>—<?php endif;?></td></tr><?php if($b['status']==='completed' || $b['status']==='confirmed'):?><tr><td colspan="6"><form class="feedback-form" method="post"><?=csrf_field()?><input type="hidden" name="feedback_id" value="<?=$b['id']?>"><label>Leave feedback <select name="rating"><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Fair</option><option value="1">1 — Poor</option></select></label><input name="comment" placeholder="Share your experience (optional)"><button class="button small">Send feedback</button></form></td></tr><?php endif;?><?php endforeach;?></tbody></table></div><?php endif;?></div>
+<?php require 'includes/footer.php'; ?>

@@ -1,0 +1,1 @@
+</main><footer>© <?=date('Y')?> MedCare Hospital Appointment Portal · Demo application</footer><script src="<?=APP_URL?>/assets/app.js"></script></body></html>

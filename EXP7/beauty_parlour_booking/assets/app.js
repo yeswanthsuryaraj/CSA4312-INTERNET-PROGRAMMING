@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{const filter=document.getElementById('bookingFilter');if(filter){filter.addEventListener('change',()=>{document.querySelectorAll('#bookingTable tbody tr[data-date]').forEach(row=>{row.hidden=!!filter.value&&row.dataset.date!==filter.value;});});}});

@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('form').forEach(f=>f.addEventListener('submit',()=>{const b=f.querySelector('button[type=submit],button:not([type])');if(b&&f.checkValidity()){b.dataset.old=b.textContent;b.disabled=true;b.textContent='Please wait…';}}));});

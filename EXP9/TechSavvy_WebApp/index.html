@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechSavvy | Electronics Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><span class="brand-mark">T</span> Tech<span>Savvy</span></a>
+  <div class="search-wrap"><span>⌕</span><input id="searchInput" placeholder="Search smartphones, laptops, accessories..."><kbd>⌘ K</kbd></div>
+  <nav class="header-actions">
+    <button class="nav-btn" id="wishlistNav">♡ <span>Wishlist</span></button>
+    <button class="nav-btn cart-nav" id="cartNav">▣ <span>Cart</span><b id="cartCount">0</b></button>
+    <button class="profile-btn" id="loginBtn">Sign in</button>
+  </nav>
+</header>
+<main>
+<section class="hero">
+  <div class="hero-copy"><div class="eyebrow"><i></i> THE NEXT-GEN TECH STORE</div>
+    <h1>Upgrade your<br><em>everyday.</em></h1>
+    <p>Discover the latest tech, handpicked for the way you live, work and play.</p>
+    <button class="primary-btn" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">Explore collection <span>→</span></button>
+    <div class="hero-stats"><div><strong>500+</strong><small>Tech products</small></div><div><strong>24/7</strong><small>Customer support</small></div><div><strong>100%</strong><small>Secure checkout</small></div></div>
+  </div>
+  <div class="hero-art"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="hero-product">🎧</div><div class="floating-tag tag-top">NEW ARRIVALS <b>↗</b></div><div class="floating-tag tag-bottom"><span>✦</span> Sound without limits</div></div>
+</section>
+<section class="trust-row"><div>✦ &nbsp; Genuine products</div><div>↗ &nbsp; Fast delivery</div><div>◇ &nbsp; Easy returns</div><div>⌁ &nbsp; Secure payments</div></section>
+<section class="section" id="catalog">
+  <div class="section-heading"><div><div class="eyebrow">CURATED FOR YOU</div><h2>Shop by category</h2></div><span class="muted">Find the right tech for every moment.</span></div>
+  <div class="category-grid" id="categoryGrid"></div>
+</section>
+<section class="section products-section">
+  <div class="section-heading"><div><div class="eyebrow">THE GOOD STUFF</div><h2>Explore products</h2></div><div class="sort-wrap"><label for="sortSelect">Sort by</label><select id="sortSelect"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option><option value="rating">Top rated</option></select></div></div>
+  <div class="filter-row"><div id="categoryFilters" class="filter-pills"></div><span id="resultCount" class="muted"></span></div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+<section class="deal-banner"><div><div class="eyebrow">LIMITED-TIME DROP</div><h2>Small upgrades.<br>Big difference.</h2><p>Explore everyday essentials and make your setup yours.</p><button class="light-btn" onclick="setCategory('Accessories')">Shop accessories →</button></div><div class="deal-emoji">⌚</div></section>
+<section class="newsletter"><div><div class="eyebrow">THE TECHSAVVY EDIT</div><h2>Good tech news.<br>No noise.</h2><p>Get product drops, useful tips and exclusive offers.</p></div><form id="newsletterForm"><input type="email" placeholder="Your email address" required><button class="primary-btn">Subscribe →</button></form></section>
+</main>
+<footer><a class="brand" href="#"><span class="brand-mark">T</span> Tech<span>Savvy</span></a><span>© 2026 TechSavvy. Demo shopping experience.</span><div><a href="#" id="adminLink">Admin demo</a><a href="#catalog">Shop</a></div></footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="cartDrawer"><div class="drawer-head"><div><div class="eyebrow">YOUR SELECTION</div><h2>Shopping cart</h2></div><button class="close-btn" data-close>×</button></div><div id="cartItems" class="drawer-content"></div><div class="drawer-foot"><div class="total-line"><span>Subtotal</span><strong id="cartTotal">₹0</strong></div><small>Shipping and taxes calculated at checkout.</small><button class="primary-btn full" id="checkoutBtn">Continue to checkout →</button></div></aside>
+<aside class="drawer" id="wishlistDrawer"><div class="drawer-head"><div><div class="eyebrow">SAVED FOR LATER</div><h2>Your wishlist</h2></div><button class="close-btn" data-close>×</button></div><div id="wishlistItems" class="drawer-content"></div></aside>
+<div class="modal" id="checkoutModal"><button class="close-btn modal-close" data-close>×</button><div class="eyebrow">ALMOST YOURS</div><h2>Checkout</h2><p class="muted">Demo checkout — no real payment will be collected.</p><form id="checkoutForm"><label>Full name<input required name="name" placeholder="Your name"></label><label>Email address<input required type="email" name="email" placeholder="you@example.com"></label><label>Delivery address<textarea required name="address" placeholder="House / street / city"></textarea></label><label>Payment method<select name="payment"><option>Cash on Delivery (demo)</option><option>UPI (demo)</option><option>Card (demo)</option></select></label><div class="total-line"><span>Order total</span><strong id="checkoutTotal">₹0</strong></div><button class="primary-btn full">Place demo order →</button></form></div>
+<div class="modal" id="adminModal"><button class="close-btn modal-close" data-close>×</button><div class="eyebrow">STORE MANAGEMENT</div><h2>Admin demo</h2><p class="muted">Add a product to this browser's demo catalogue.</p><form id="adminForm"><label>Product name<input name="name" required placeholder="e.g. Wireless keyboard"></label><label>Category<select name="category"><option>Smartphones</option><option>Laptops</option><option>Audio</option><option>Wearables</option><option>Accessories</option></select></label><label>Price (₹)<input name="price" type="number" min="1" required></label><label>Emoji / image symbol<input name="emoji" maxlength="4" placeholder="⌨️"></label><button class="primary-btn full">Add product</button></form></div>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body></html>
